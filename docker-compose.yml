@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  bonenza-fe:
+    # Không cần "build", vì chúng ta sẽ chạy từ code đã có sẵn
+    image: node:18-alpine      # Sử dụng image Node.js gọn nhẹ cho môi trường production
+    container_name: bonenza-app
+    working_dir: /app
+    
+    # Ánh xạ thư mục hiện tại trên VPS (chứa code đã giải nén) vào trong container
+    volumes:
+      - .:/app
+      
+    # Ánh xạ cổng 3000 của VPS vào cổng 3000 mà ứng dụng đang chạy bên trong container
+    ports:
+      - '3000:80'
+      
+    # Đọc các biến môi trường từ file .env có trong thư mục
+    env_file:
+      - ./.env
+      
+    # Lệnh để khởi động ứng dụng của bạn (giả sử có script "start" trong package.json)
+    command: npm start
+    
+    restart: unless-stopped
